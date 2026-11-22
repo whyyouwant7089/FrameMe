@@ -1,0 +1,33 @@
+name: Build FRAME ME APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Extract project
+        run: |
+          unzip FRAME_ME_Android_Starter.zip -d project
+
+      - name: Build APK
+        run: |
+          cd project/FrameMeAndroid
+          gradle assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FRAME-ME-APK
+          path: project/FrameMeAndroid/app/build/outputs/apk/debug/app-debug.apk
